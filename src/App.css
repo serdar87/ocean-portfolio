@@ -23,19 +23,16 @@ cursor: url('./assets/fish.png') 16 16, auto !important;
 
 body { 
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; 
-  /* Burada tekrar cursor tanımlamaya gerek yok, yukarıdan alacak */
+
 }
 
-/* 2. SİHİRLİ KOMUT: Sitedeki "HER ŞEY" (*) babasından (body) imleci miras alsın */
-/* Bu satır, o sağ üstteki boşluk sorununu çözen asıl kahraman */
 * {
   cursor: inherit;
 }
 
 /* 3. Tıklanabilir Öğeler */
-/* Zaten inherit dedik ama bazı tarayıcılar butonlarda inatçıdır, burası garanti olsun */
-a, button, .radialPill, .clickable, .hover-trigger strong, .tech-pill-mini, .audio-control-panel {
-  cursor: inherit !important; /* Balığı kullanmaya zorla */
+a, button, .radialPill, .clickable, .hover-trigger strong, .tech-pill-mini, .audio-control-panel, .sequence-bottle, .bottle-cork, .close-btn {
+  cursor: inherit !important;
 }
 
 
@@ -217,20 +214,8 @@ a, button, .radialPill, .clickable, .hover-trigger strong, .tech-pill-mini, .aud
 .aLogbook { --t: translate(-50%, -50%) rotate(250deg) translate(-74px, -135px) rotate(-299deg); transform: var(--t); }
 .aAbout { --t: translate(-50%, -50%) rotate(318deg) translate(-74px, -135px) rotate(-299deg); transform: var(--t); }
 
-/* Contact Butonu - Şişe Modu */
+/* Contact Butonu - Şişe Modu (şişe modunu chatbot'a ekleyceğim için kaldırıdım eski yedek dosyalarda mevcut)*/
 .aContact { --t: translate(-50%, -50%) rotate(-235deg) translate(32px, -153px) rotate(290deg); transform: var(--t); }
-.hudRadial .aContact {
-  background: rgba(12, 28, 44, 0.55) !important; 
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 80px 50px 50px 80px !important; 
-  min-width: auto !important; width: auto !important;
-  padding: 8px 18px 8px 22px !important;
-  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05), 0 10px 26px rgba(0,0,0,0.28) !important;
-}
-.hudRadial .aContact::before {
-  content: ''; position: absolute; left: -5px; top: 50%; transform: translateY(-50%);
-  width: 6px; height: 14px; background: #8B5A2B; border-radius: 3px 0 0 3px; opacity: 0.9;
-}
 
 
 /* =========================================
@@ -672,19 +657,18 @@ div.project-card.sonar-card .card-top span:first-child { animation-delay: 4s !im
   height: 44px;
   border-radius: 50%;
   
-  /* Metalik Düğme Görünümü */
+  
   background: radial-gradient(circle at 30% 30%, #2a3b55 0%, #0a192f 80%);
   border: 2px solid rgba(100, 255, 218, 0.2);
   box-shadow: 
     0 5px 15px rgba(0,0,0,0.5), 
     inset 0 1px 1px rgba(255,255,255,0.1);
   
-  /* Dönme Animasyonu */
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform: rotate(-135deg); /* Başlangıç (Kapalı) */
 }
 
-/* Düğme Üzerindeki Çizgi (Gösterge) */
+
 .knob-indicator {
   position: absolute;
   top: 5px;
@@ -758,7 +742,7 @@ div.project-card.sonar-card .card-top span:first-child { animation-delay: 4s !im
    RESPONSIVE FLOW PROTOCOL (İÇERİK ÇAKIŞMASINI ÖNLEME)
    ================================================================= */
 
-/* 1. ARA GEÇİŞ (LAPTOP & DAR PENCERE) - 1500px Altı */
+
 @media (max-width: 1500px) {
   
   /* KRİTİK DÜZELTME: Sabit yükseklikleri iptal ediyoruz! */
@@ -779,10 +763,10 @@ div.project-card.sonar-card .card-top span:first-child { animation-delay: 4s !im
     height: auto !important; /* 125vh'yi iptal et */
     min-height: 80vh;        /* En az ekranın %80'i kadar olsun */
     margin-bottom: 100px;    /* Bölümler arasına mesafe koy */
-    display: block !important; /* Flex ortalamayı iptal et, normal blok olsun */
+    display: block !important; 
   }
 
-  /* Bölümlerin kendisi */
+  
   .about, 
   .projects-content, 
   .experience-content, 
@@ -793,7 +777,7 @@ div.project-card.sonar-card .card-top span:first-child { animation-delay: 4s !im
     max-width: 100% !important;
   }
 
-  /* Kart Izgaraları */
+  
   .projects-grid, .career-grid {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
@@ -801,13 +785,13 @@ div.project-card.sonar-card .card-top span:first-child { animation-delay: 4s !im
 
   /* KART İÇİ DÜZENLEME (Yazıların üst üste binmesini engelle) */
   .card-header-row {
-    flex-direction: column; /* Tarihi başlığın altına al */
+    flex-direction: column; 
     align-items: flex-start;
     gap: 15px;
   }
   
   .timeline-date, .date-badge {
-    /* Tarihi "mutlak" konumdan çıkar, normal akışa al */
+   
     position: relative !important; 
     top: auto !important;
     right: auto !important;
@@ -832,7 +816,7 @@ div.project-card.sonar-card .card-top span:first-child { animation-delay: 4s !im
   .content {
     padding-right: 20px !important; 
     padding-left: 20px !important;
-    padding-bottom: 150px !important; /* Dümene yer aç */
+    padding-bottom: 150px !important; 
   }
 
   /* Kartlar tek sütun */
@@ -858,12 +842,11 @@ div.project-card.sonar-card .card-top span:first-child { animation-delay: 4s !im
 }
 /* --- YAPIM AŞAMASI (ONGOING) ROZETİ --- */
 .badge-ongoing {
-  /* Sarı / Turuncu uyarı rengi */
+  
   color: #ffc107 !important;
   border-color: rgba(255, 193, 7, 0.5) !important;
   background: rgba(255, 193, 7, 0.1) !important;
   
-  /* Hafif yanıp sönme efekti */
   animation: pulseWarning 2s infinite;
 }
 

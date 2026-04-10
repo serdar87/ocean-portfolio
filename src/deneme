@@ -1,0 +1,302 @@
+/* =========================================
+   1. ANA KONTEYNER (ARKA PLAN)
+========================================= */
+.chatbot-sequence-container {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  transition: all 0.5s ease;
+}
+
+/* Şişe hareket halindeyken veya ferman açıkken arka planı bulanıklaştır */
+.chatbot-sequence-container.centered,
+.chatbot-sequence-container.opened,
+.chatbot-sequence-container.repacking,
+.chatbot-sequence-container.throwing {
+  backdrop-filter: blur(12px);
+  background-color: rgba(10, 25, 47, 0.7);
+  pointer-events: auto;
+}
+
+
+/* =========================================
+   2. ŞİŞE VE TIPA (TEMEL TASARIM)
+========================================= */
+/* Şişe (Sağ Üst Bekleme Durumu) */
+.sequence-bottle {
+  position: fixed;
+  top: 48px;
+  right: 120px; /* Sound butonunun hemen yanı */
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: auto;
+}
+
+/* Şişe Tasarımı (CSS Çizim) */
+.technical-bottle {
+  background: radial-gradient(circle at 30% 30%, #2a3b55 0%, #0a192f 80%);
+  border: 2px solid rgba(100, 255, 218, 0.2);
+  box-shadow: 
+    0 5px 15px rgba(0,0,0,0.5), 
+    inset 0 1px 1px rgba(255,255,255,0.1);
+  
+  /* Mevcut kavisini koruyoruz */
+  border-radius: 60px 50px 50px 60px;
+  
+  /* Otomatik boyut yerine şişeye benzer bir oran verelim */
+  min-width: 90px; /* Genişliği artırdık */
+  height: 35px;     /* Yüksekliği sabitledik */
+  
+  padding: 8px 18px 8px 22px;
+    
+  /* Konumlandırma ve Flex (İçerik için) */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  
+  /* Pürüzsüzlük için */
+  transition: all 0.3s ease;
+}
+
+
+
+.technical-bottle::after {
+  content: '';
+  position: absolute;
+  
+  /* Gövdenin tam dış sol sınırına aldık. Kendi genişliği kadar sola çektik */
+  left: -15px; 
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 14px;
+  
+  background: radial-gradient(circle at 94% 30%, #2a3b55 0%, #0a192f 80%);
+  border: 2px solid rgba(100, 255, 218, 0.2);
+  border-right: none;/* Bu bizim after tarafının border kaldırmamız için*/
+  box-shadow: 
+    0 5px 15px rgba(0,0,0,0.5), 
+    inset 0 1px 1px rgba(255,255,255,0.1);
+  
+  /* Sadece sol tarafı kavisli yaptık */
+  border-radius: 4px 0 0 4px; 
+  
+  /* Gövdenin üzerine binmediği için artık koyulaşma yapmayacak */
+  z-index: 1; 
+}
+
+
+/* Gerçek Tıpa */
+.bottle-cork {
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px; 
+  height: 10px; 
+  border-radius: 2px 0 0 2px;
+  background-color: #A67C52;
+  background-image: linear-gradient(135deg, rgba(166, 124, 82, 1) 0%, rgba(139, 90, 43, 1) 100%);
+  
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+
+/* =========================================
+   3. ANİMASYON AŞAMALARI (DURUMLAR)
+========================================= */
+
+/* --- AŞAMA 1: ŞİŞE MERKEZE GELİR (CENTERED) --- */
+/* (Ayrıca Repacking ve Throwing durumunda da merkezde kalmasını sağlar) */
+.sequence-bottle.centered,
+.sequence-bottle.repacking,
+.sequence-bottle.throwing {
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%) scale(3) rotate(-15deg);
+  transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 1;
+}
+
+/* Tıpa beni çek diye parlar */
+.sequence-bottle.centered .bottle-cork {
+  cursor: pointer;
+  animation: corkPulse 1.5s infinite;
+}
+.sequence-bottle.centered .bottle-cork:hover {
+  transform: translateY(-50%) translateX(-3px); 
+}
+
+/* --- AŞAMA 2: TIPA ÇEKİLİR (OPENED) --- */
+.sequence-bottle.opened {
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%) scale(3) rotate(-15deg);
+  opacity: 0; /* Ferman açılacağı için şişe görünmez olur */
+  pointer-events: none;
+  transition: opacity 0.5s ease 0.3s;
+}
+
+/* Tıpa sola doğru fırlar */
+.sequence-bottle.opened .bottle-cork {
+  transform: translateY(-50%) translateX(-80px) rotate(-45deg);
+  opacity: 0;
+  transition: all 0.4s ease-out; 
+}
+
+/* --- AŞAMA 3: YENİDEN PAKETLEME (REPACKING & THROWING) --- */
+/* Ferman kapanınca şişe ortada belirir, tıpa havada bekler */
+.sequence-bottle.repacking .bottle-cork {
+  cursor: grab;
+  animation: corkPulse 1.5s infinite; 
+  transform: translateY(-50%) rotate(0deg); 
+  opacity: 1;
+}
+.sequence-bottle.repacking .bottle-cork:active { 
+  cursor: grabbing; 
+}
+
+/* Tıpa yerine takıldı, şişe fırlatılmaya hazır */
+.sequence-bottle.throwing {
+  cursor: grab;
+  animation: bottlePulse 1.5s infinite;
+}
+.sequence-bottle.throwing:active { 
+  cursor: grabbing; 
+}
+.sequence-bottle.throwing .bottle-cork {
+  opacity: 1;
+  transform: translateY(-50%); 
+}
+
+/* --- AŞAMA 4: FIRLATILMA EFEKTİ (THROWN) --- */
+.sequence-bottle.thrown {
+  top: 50%;
+  right: 50%;
+  transform: translate(150vw, -150vh) scale(0.5) rotate(720deg) !important;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.55, 0.085, 0.68, 0.53) !important;
+  pointer-events: none;
+}
+
+
+/* =========================================
+   4. KEYFRAMES & EFEKTLER
+========================================= */
+@keyframes corkPulse {
+  0%, 100% { box-shadow: -2px 0 5px rgba(0,0,0,0.2), 0 0 0 rgba(100, 255, 218, 0); }
+  50% { box-shadow: -2px 0 15px #64ffda, 0 0 10px #64ffda; }
+}
+
+@keyframes bottlePulse {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(100,255,218,0)); }
+  50% { filter: drop-shadow(0 0 15px #64ffda); }
+}
+
+@keyframes fermanUnroll {
+  0% { opacity: 0; transform: translate(-50%, -40%) scaleY(0) scaleX(0.1); }
+  40% { opacity: 1; transform: translate(-50%, -45%) scaleY(0.1) scaleX(1); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scaleY(1) scaleX(1); }
+}
+
+
+/* =========================================
+   5. HOLOGRAFİK FERMAN (SOHBET EKRANI)
+========================================= */
+.ferman-window {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  height: 550px;
+  background: rgba(10, 25, 47, 0.95);
+  border: 1px solid #64ffda;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(100, 255, 218, 0.1);
+  overflow: hidden;
+  animation: fermanUnroll 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.5s both;
+}
+
+.ferman-window::before, .ferman-window::after {
+  content: ""; position: absolute; width: 30px; height: 30px; border: 2px solid #64ffda; pointer-events: none;
+}
+.ferman-window::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+.ferman-window::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+.chatbot-header {
+  padding: 20px;
+  background: rgba(100, 255, 218, 0.05);
+  border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.chatbot-title {
+  font-family: monospace;
+  color: #64ffda;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.close-btn {
+  background: transparent; border: none; color: #64ffda; cursor: pointer; font-size: 1.2rem;
+}
+
+.chatbot-body {
+  flex: 1; padding: 25px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 15px;
+  background-image: linear-gradient(rgba(100, 255, 218, 0.03) 1px, transparent 1px), 
+                    linear-gradient(90deg, rgba(100, 255, 218, 0.03) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+.ai-message {
+  color: #e6f1ff;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  padding: 15px;
+  border-left: 2px solid #64ffda;
+  background: rgba(100, 255, 218, 0.03);
+}
+
+.chatbot-input-area {
+  padding: 15px 20px;
+  display: flex;
+  gap: 10px;
+  background: rgba(10, 25, 47, 0.8);
+  border-top: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.chatbot-input-area input {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(100, 255, 218, 0.3);
+  color: #e6f1ff;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-family: monospace;
+  outline: none;
+}
+
+.chatbot-input-area button {
+  background: rgba(100, 255, 218, 0.1);
+  color: #64ffda;
+  border: 1px solid #64ffda;
+  padding: 0 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: monospace;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
