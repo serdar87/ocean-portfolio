@@ -12,13 +12,16 @@ import Contact from './Contact';
 // --- SES DOSYALARINI İÇERİ AL ---
 import soundAmbience from "./assets/underwater.mp3";
 import soundSonar from "./assets/sonar.mp3";
+import popSound from './assets/Tipa_Acma.mp3';
+import openSound from './assets/AI_Acilma.mp3';
+import closeSound from './assets/AI_Kapanma.mp3';
 //ChatBot 
 import ChatBot from "./ChatBot";
 
 export default function App() {
   const [depth, setDepth] = useState(0);
   // --- SES KONTROL STATE'İ ---
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
 
   const sceneRef = useRef(null);
 
@@ -31,6 +34,45 @@ export default function App() {
   const [corkPos, setCorkPos] = useState({ x: -120, y: -80 }); 
   const [bottlePos, setBottlePos] = useState({ x: 0, y: 0 });
   const [dragTarget, setDragTarget] = useState(null);
+  // Sesleri hafızada tutacak obje
+ const audioRefs = useRef({});
+
+  // volume = 1 (Tam ses), volume = 0.1 (Kısık ses)
+  const playAudio = (soundFile, volume = 1) => { 
+    if (!isMuted) {
+      if (!audioRefs.current[soundFile]) {
+        audioRefs.current[soundFile] = new Audio(soundFile);
+      }
+      
+      const audio = audioRefs.current[soundFile];
+      audio.volume = volume; // Sesi burada ayarlıyoruz
+      audio.currentTime = 0; 
+      audio.play().catch(err => console.log("Ses çalınamadı:", err));
+    }
+  };
+  // Şişenin her hareketini dinleyip doğru sesi çalan otomatik sistem
+  useEffect(() => {
+    switch (bottleSequence) {
+      case 'opened': 
+        // 1. Tıpa çekildi
+        playAudio(popSound); // "Pop" sesi
+        
+        // Yarım saniye sonra Yapay Zeka uyanış sesi
+        setTimeout(() => {
+          playAudio(openSound); 
+        }, 400); 
+        break;
+
+      case 'repacking': 
+        // 2. Çarpıya (X) basıldı, AI kapanıyor / Tıpa yerine dönüyor
+        playAudio(closeSound); 
+        break;
+
+      default:
+        // Diğer hiçbir durumda (fırlatma, üzerine gelme vs.) ses çalma!
+        break;
+    }
+  }, [bottleSequence]);
  // --- SÜRÜKLEME MOTORU (FİZİK VE SÖKME EKLENTİLİ) ---
   useEffect(() => {
     const handleMove = (e) => {
@@ -67,6 +109,7 @@ export default function App() {
           if (corkPos.x > -60 && corkPos.x < 30 && Math.abs(corkPos.y) < 40) {
             setCorkPos({ x: 0, y: 0 }); 
             setBottleSequence('throwing'); 
+            
           }
         }
       } else if (dragTarget === 'bottle') {
@@ -94,6 +137,24 @@ export default function App() {
     };
   }, [dragTarget, corkPos, bottlePos, bottleSequence]); // DİKKAT: sürükleme tıpa
   
+  // --- ESC TUŞU İLE ÇIKIŞ KONTROLÜ ---
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setBottleSequence('idle'); // Şişeyi sağ üste geri gönder
+        setBottlePos({ x: 0, y: 0 }); // Şişe pozisyonunu sıfırla
+        setCorkPos({ x: 0, y: 0 }); // Tıpa pozisyonunu sıfırla
+        
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    
+    // Bileşen ekrandan kalktığında dinleyiciyi temizle
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const depth01 = Math.min(depth / 120, 1);
   const visual01 = Math.min(Math.pow(depth01, 0.55), 1);
@@ -261,20 +322,20 @@ export default function App() {
     }
   }}
 >
-  <div 
-    className="technical-bottle"
-    style={{
-      marginLeft: `${bottlePos.x}px`,
-      marginTop: `${bottlePos.y}px`,
-      transition: dragTarget === 'bottle' ? 'none' : 'margin 0.3s ease'
-    }}
-    onPointerDown={(e) => {
-      if (bottleSequence === 'throwing') {
-        setDragTarget('bottle');
-        e.preventDefault();
-      }
-    }}
-  >
+  <div
+      className="technical-bottle"
+      style={{
+        marginLeft: `${bottlePos.x}px`,
+        marginTop: `${bottlePos.y}px`,
+        transition: dragTarget === 'bottle' ? 'none' : 'margin 0.3s ease'
+      }}
+      onPointerDown={(e) => {
+        if (bottleSequence === 'throwing') {
+          setDragTarget('bottle');
+          e.preventDefault();
+        }
+      }}
+    >
     {/* TIPA */}
     <div 
       className="bottle-cork"
@@ -293,6 +354,7 @@ export default function App() {
         }
       }}
     ></div>
+    <span className="bottle-brand">SerdAI</span>
   </div>
 </div>
 
@@ -503,9 +565,11 @@ export default function App() {
       <FishingHook />
 
       <ChatBot 
-  sequenceState={bottleSequence} 
-  onClose={() => setBottleSequence('repacking')} 
-/>
+          sequenceState={bottleSequence}
+          onClose={() => {
+            setBottleSequence('repacking');
+          }}
+        />
       
     </div>
   );

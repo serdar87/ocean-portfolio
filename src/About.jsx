@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import tcgImage from './assets/tcg-kinaliada.jpg';
 import dhoImage from './assets/tur-navy.jpg';
 
+
 const About = () => {
   const [activeImage, setActiveImage] = useState(null);
 

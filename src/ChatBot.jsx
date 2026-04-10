@@ -37,4 +37,5 @@ const ChatBot = ({ sequenceState, onClose }) => {
   );
 };
 
+
 export default ChatBot;

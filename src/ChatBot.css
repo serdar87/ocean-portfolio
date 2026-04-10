@@ -1,6 +1,7 @@
 /* =========================================
    1. ANA KONTEYNER (ARKA PLAN)
 ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
 .chatbot-sequence-container {
   position: fixed;
   inset: 0;
@@ -302,4 +303,42 @@
   font-family: monospace;
   font-weight: bold;
   transition: all 0.2s ease;
+}
+
+.bottle-brand {
+  font-family: 'Caveat', cursive;
+  color: rgba(100, 255, 218, 0.5); /* Opaklığı kıstık, cama gömülü dursun */
+  font-size: 18px; /* Şişenin dışına taşmaması için küçülttük */
+  position: absolute;
+  top: 50%; /* Tam dikey orta */
+  left: 50%; /* Tam yatay orta */
+  transform: translate(-50%, -50%); /* rotate ayarını sildik, şişeyle paralel duracak */
+  text-shadow: 0 0 5px rgba(100, 255, 218, 0.4);
+  
+  pointer-events: none; 
+  user-select: none; 
+  z-index: 5;
+}
+
+/* Şişe parladığında yazı da parlasın */
+.sequence-bottle.throwing .bottle-brand {
+  text-shadow: 0 0 15px rgba(100, 255, 218, 1);
+  color: #64ffda;
+}
+
+/* Fare üzerine geldiğinde şişenin genel parlaması */
+.technical-bottle {
+  transition: filter 0.3s ease;
+}
+
+.technical-bottle:hover {
+  /* Şişenin etrafına hafif bir neon hare ekler */
+  filter: drop-shadow(0 0 8px rgba(100, 255, 218, 0.5));
+}
+
+/* Fare şişenin üzerindeyken yazının parlaması */
+.technical-bottle:hover .bottle-brand {
+  color: #64ffda; /* Rengi tam neon yeşile çeker */
+  text-shadow: 0 0 12px rgba(100, 255, 218, 1); /* Parlamayı güçlendirir */
+  opacity: 1;
 }
