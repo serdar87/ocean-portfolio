@@ -342,3 +342,48 @@
   text-shadow: 0 0 12px rgba(100, 255, 218, 1); /* Parlamayı güçlendirir */
   opacity: 1;
 }
+
+/* REHBER BALONCUĞU (TOOLTIP) */
+.bottle-guide-tooltip {
+  position: absolute;
+  bottom: 120%; /* Şişenin biraz üzerinde durması için */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 25, 47, 0.9);
+  color: #64ffda;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(100, 255, 218, 0.4);
+  font-family: 'monospace';
+  font-size: 13px;
+  white-space: nowrap;
+  pointer-events: none; /* Mouse ile seçilmesin, tıklamayı engellemesin */
+  box-shadow: 0 0 15px rgba(100, 255, 218, 0.2);
+  animation: tooltipFloat 2s ease-in-out infinite;
+  z-index: 10002;
+}
+
+/* Küçük Ok İşareti */
+.tooltip-arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(100, 255, 218, 0.4) transparent transparent transparent;
+}
+
+/* Yazı için Hafif Havada Yüzme Animasyonu */
+@keyframes tooltipFloat {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -8px); }
+}
+
+/* Şişe merkezdeyken yazıyı büyütelim (Scale 3 olduğu için düzeltme) */
+.sequence-bottle.centered .bottle-guide-tooltip,
+.sequence-bottle.repacking .bottle-guide-tooltip,
+.sequence-bottle.throwing .bottle-guide-tooltip {
+  font-size: 6px; /* Şişe scale(3) olduğu için yazıyı küçültüyoruz ki normal görünsün */
+  bottom: 110%;
+}

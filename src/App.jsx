@@ -22,6 +22,7 @@ export default function App() {
   const [depth, setDepth] = useState(0);
   // --- SES KONTROL STATE'İ ---
   const [isMuted, setIsMuted] = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
 
   const sceneRef = useRef(null);
 
@@ -34,6 +35,15 @@ export default function App() {
   const [corkPos, setCorkPos] = useState({ x: -120, y: -80 }); 
   const [bottlePos, setBottlePos] = useState({ x: 0, y: 0 });
   const [dragTarget, setDragTarget] = useState(null);
+
+  //BİLGİLENDİRME YAZILARI İÇİN
+  const guideMessages = {
+  idle: "SerdAI için şişeye tıklayın",
+  centered: "SerdAI'ı serbest bırakmak için tıpayı çekip çıkarın!",
+  repacking: "Kapsülü kapatmak için tıpayı şişeye takın.",
+  throwing: "Kapatmak için şişeyi geriye çekip denize fırlatın!"
+};
+
   // Sesleri hafızada tutacak obje
  const audioRefs = useRef({});
 
@@ -116,6 +126,7 @@ export default function App() {
         const dist = Math.sqrt(bottlePos.x**2 + bottlePos.y**2);
         if (dist > 80) {
           setBottleSequence('thrown'); 
+          setShowGuide(false);
           setTimeout(() => {
             setBottleSequence('idle'); 
             setBottlePos({ x: 0, y: 0 });
@@ -322,6 +333,13 @@ export default function App() {
     }
   }}
 >
+  {/* BİLGİLENDİRME YAZISI BURAYA GELİYOR */}
+  {showGuide && guideMessages[bottleSequence] && (
+    <div className="bottle-guide-tooltip">
+      {guideMessages[bottleSequence]}
+      <div className="tooltip-arrow"></div>
+    </div>
+  )}
   <div
       className="technical-bottle"
       style={{
@@ -336,6 +354,7 @@ export default function App() {
         }
       }}
     >
+      
     {/* TIPA */}
     <div 
       className="bottle-cork"
