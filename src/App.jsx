@@ -40,7 +40,7 @@ export default function App() {
   const guideMessages = {
   idle: "SerdAI için şişeye tıklayın",
   centered: "SerdAI'ı serbest bırakmak için tıpayı çekip çıkarın!",
-  repacking: "Kapsülü kapatmak için tıpayı şişeye takın.",
+  repacking: "Tıpayı şişeye takın.",
   throwing: "Kapatmak için şişeyi geriye çekip denize fırlatın!"
 };
 
@@ -82,7 +82,8 @@ export default function App() {
         // Diğer hiçbir durumda (fırlatma, üzerine gelme vs.) ses çalma!
         break;
     }
-  }, [bottleSequence]);
+  }, [bottleSequence]);  
+  
  // --- SÜRÜKLEME MOTORU (FİZİK VE SÖKME EKLENTİLİ) ---
   useEffect(() => {
     const handleMove = (e) => {
