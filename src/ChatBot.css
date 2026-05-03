@@ -221,8 +221,9 @@
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 420px;
-  height: 550px;
+  width: 700px; /* Ekranı iyice genişlettik (istediğin gibi 600px veya 800px de yapabilirsin) */
+  max-width: 90vw; /* Telefondan girilirse ekrandan taşmaması için güvenlik sınırı koyduk */
+  height: 550px; /* Yüksekliği aynı bıraktım, istersen burayı da 650px yapıp uzatabilirsin */
   background: rgba(10, 25, 47, 0.95);
   border: 1px solid #64ffda;
   border-radius: 16px;
@@ -265,13 +266,32 @@
   background-size: 25px 25px;
 }
 
+/* YAPAY ZEKA MESAJI (Sola Yaslı) */
 .ai-message {
+  align-self: flex-start; /* Kutuyu sola iter */
+  max-width: 80%;
   color: #e6f1ff;
   line-height: 1.6;
   font-size: 0.95rem;
   padding: 15px;
   border-left: 2px solid #64ffda;
   background: rgba(100, 255, 218, 0.03);
+  border-radius: 2px 16px 16px 16px; /* Sol üstü sivri, diğerleri yuvarlak */
+  white-space: pre-wrap;
+}
+
+/* KULLANICI MESAJI (Sağa Yaslı) */
+.user-message {
+  align-self: flex-end; /* KUTUYU SAĞA İTER */
+  max-width: 80%;
+  color: #64ffda; /* Terminal yeşili yazı */
+  line-height: 1.6;
+  font-size: 0.95rem;
+  padding: 15px;
+  border-right: 2px solid #64ffda; /* Çizgiyi sağa aldık */
+  background: rgba(100, 255, 218, 0.1); /* Biraz daha belirgin bir arka plan */
+  border-radius: 16px 2px 16px 16px; /* Sağ üstü sivri, diğerleri yuvarlak */
+  white-space: pre-wrap;
 }
 
 .chatbot-input-area {
